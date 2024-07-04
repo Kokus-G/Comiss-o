@@ -1,20 +1,26 @@
 import streamlit as st
 import pandas as pd
 import pyodbc
+import toml
 from datetime import datetime, timedelta, time
 from PIL import Image
 
+# Carregar as configurações do TOML
+with open("config.toml", "r") as f:
+    config = toml.load(f)
+
+# Extrair as configurações do banco de dados
+driver = config['database']['driver']
+server = config['database']['server']
+database = config['database']['database']
+uid = config['database']['uid']
+pwd = config['database']['pwd']
+
+# Montar a string de conexão
+dados_conexao = f"Driver={{{driver}}};Server={server};Database={database};UID={uid};PWD={pwd};"
+
 # Configurações de layout da página do Streamlit
 st.set_page_config(layout="wide")
-
-# Configurações da string de conexão
-dados_conexao = (
-    "Driver={SQL Server};"
-    "Server=192.168.1.70;"
-    "Database=MISTERCHEFNET;"
-    "UID=sa;"
-    "PWD=MISTERCHEFNET;"
-)
 
 # Estabelecendo a conexão
 try:
